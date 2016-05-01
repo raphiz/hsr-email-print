@@ -42,7 +42,7 @@ from email import encoders
 
 __version__ = "0.1"
 
-sender = "<vorname.nachname>@hsr.ch"
+sender = "vorname.nachname@hsr.ch"
 reciever = "mobileprint@hsr.ch"
 smtp_server = 'smtp.hsr.ch'
 
