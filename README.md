@@ -9,6 +9,8 @@ Dieses inoffizielle Skript ist auf eigene Gefahr zu verwenden!
 
 ## Installation
 
+Python3 muss auf dem system installiert sein!
+
 Führe folgende Kommandos schritt für schritt aus.
 *Ersetze die E-Mail in der ersten Zeile mit deiner HSR-Email (Schema vorname.nachname und nicht mit kürzel!)*
 
