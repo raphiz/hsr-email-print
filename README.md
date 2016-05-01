@@ -15,7 +15,7 @@ Führe folgende Kommandos schritt für schritt aus.
 ```bash
 EMAIL='vorname.nachname@hsr.ch'
 wget "https://raw.githubusercontent.com/raphiz/hsr-email-print/master/pdf2email"
-sed -i -e 's/vorname.nachname@hsr.ch/'$EMAIL'/g' test.txt
+sed -i -e 's/vorname.nachname@hsr.ch/'$EMAIL'/g' pdf2email
 wget -O "Generic-PostScript_Printer-Postscript.ppd" "http://www.openprinting.org/ppd-o-matic.php?driver=Postscript&printer=Generic-PostScript_Printer&.submit=Generate+PPD+file&show=0&.cgifields=show&.cgifields=shortgui"
 sudo mv Generic-PostScript_Printer-Postscript.ppd /etc/cups/ppd/
 sudo mv pdf2email /usr/lib/cups/backend/pdf2email
