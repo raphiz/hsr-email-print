@@ -40,10 +40,10 @@ from email.mime.text import MIMEText
 from email import encoders
 
 
-__version__ = "0.1"
+__version__ = '0.1'
 
-sender = "vorname.nachname@hsr.ch"
-reciever = "mobileprint@hsr.ch"
+sender = 'vorname.nachname@hsr.ch'
+reciever = 'mobileprint@hsr.ch'
 smtp_server = 'smtp.hsr.ch'
 
 
@@ -55,14 +55,14 @@ def get_writable_dir():
     variable named "DEVICE_URI" while this process runs.
     """
     dev_uri = os.environ['DEVICE_URI']
-    write_dir = dev_uri.split(":")[1].strip()
+    write_dir = dev_uri.split(':')[1].strip()
     if os.path.exists(write_dir):
         if os.access(write_dir, os.R_OK | os.W_OK):
             return write_dir
         else:
-            raise Exception("User does not have read/write access to: %s" % write_dir)
+            raise Exception('User does not have read/write access to: %s' % write_dir)
     else:
-        raise Exception("Device URI: Path does not exist: %s" % write_dir)
+        raise Exception('Device URI: Path does not exist: %s' % write_dir)
 
 
 def get_output_filename(request_datetime):
@@ -70,7 +70,7 @@ def get_output_filename(request_datetime):
 
     Filename format: {user}_{job-id}_{date_time}.pdf"""
 
-    return "%s_%s_%s.pdf" % (sys.argv[2], sys.argv[1], request_datetime.strftime("%Y%m%d_%H%M%S"))
+    return '%s_%s_%s.pdf' % (sys.argv[2], sys.argv[1], request_datetime.strftime('%Y%m%d_%H%M%S'))
 
 
 def get_output_filepath(request_datetime):
@@ -87,9 +87,9 @@ def create_pdf(output_file):
                   that fonts are not flushed between pages. (tip source unknown)
     -sPAPERSIZE acts like a default value and needs to be set, but does not affect the final print.
     """
-    command = ("gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 "
-               "-sPAPERSIZE=a4 -dPDFSETTINGS=/printer -sOutputFile=%s -c save pop -f"
-               " - &> /dev/null" % output_file)
+    command = ('gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 '
+               '-sPAPERSIZE=a4 -dPDFSETTINGS=/printer -sOutputFile=%s -c save pop -f'
+               ' - &> /dev/null' % output_file)
     fpipe = os.popen(command)
     ret_code = fpipe.close()    # This is the child process' exit code. None on success.
     return ret_code
@@ -103,19 +103,19 @@ def send_email(output_file, request_datetime):
     """
     # Create the container (outer) email message.
     outer = MIMEMultipart()
-    outer["Subject"] = "PDF print request"
-    outer["From"] = sender
-    outer["To"] = reciever
-    outer.preamble = "Requested PDF print."
+    outer['Subject'] = 'PDF print request'
+    outer['From'] = sender
+    outer['To'] = reciever
+    outer.preamble = 'Requested PDF print.'
     # Guarantees the message ends in a newline
-    outer.epilogue = ""
+    outer.epilogue = ''
 
-    msg = MIMEText("Print me, please!\n\r", "plain", "utf-8")
+    msg = MIMEText('Print me, please!\n\r', 'plain', 'utf-8')
     outer.attach(msg)
 
     # PDF ATTACHMENT PART
     fp = open(output_file, 'rb')
-    msg = MIMEBase("application", "pdf")
+    msg = MIMEBase('application', 'pdf')
     msg.set_payload(fp.read())
     fp.close()
     # Encode the payload using Base64
@@ -143,30 +143,30 @@ def main():
     if len(sys.argv) == 1:
         # Without arguments should give backend info.
         # This is also used when lpinfo -v is issued, where it should include "direct this_backend"
-        logger("direct %s \"Unknown\" \"Direct PDF Printing/Delivery to user email\"\n"
+        logger('direct %s "Unknown" "Direct PDF Printing/Delivery to user email"\n'
                % os.path.basename(sys.argv[0]))
         sys.exit(0)
     if len(sys.argv) not in (5, 6):
-        logger("Usage: %s job-id user title copies options [file]\n"
+        logger('Usage: %s job-id user title copies options [file]\n'
                % os.path.basename(sys.argv[0]))
-        logger("Wrong number of arguments. Usage: %s job-id user" % sys.argv[0])
+        logger('Wrong number of arguments. Usage: %s job-id user' % sys.argv[0])
         sys.exit(1)
 
     request_datetime = datetime.datetime.now()
     try:
         output_file = get_output_filepath(request_datetime)
     except Exception as err:
-        if err[0] != "DEVICE_URI":
+        if err[0] != 'DEVICE_URI':
             logger(err[0])
     else:
         ret_code = create_pdf(output_file)
         if ret_code:    # ret_code != 0
-            logger("Failed to create PDF document %s" % ret_code)
+            logger('Failed to create PDF document %s' % ret_code)
             sys.exit(1)
         try:
             send_email(output_file, request_datetime)
         except Exception as e:
-            logger("Failed to send PDF document (%s)" % e)
+            logger('Failed to send PDF document (%s)' % e)
 
         if os.path.exists(output_file):
             os.remove(output_file)
