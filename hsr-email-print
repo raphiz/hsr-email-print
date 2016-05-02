@@ -1,10 +1,9 @@
 #! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# HSR CUPS E-Mail print - by http://altcomphsr.vshsr.ch/ based on the work of
+# hsr-email-print - by http://altcomphsr.vshsr.ch/ based on
 # pdf2email by George Notaras <George [D.O.T.] Notaras [A.T.] gmail [D.O.T.] com>
-#
-# pdf2email: http://www.g-loaded.eu/2006/12/03/pdf2email-cups-backend/
+# (http://www.g-loaded.eu/2006/12/03/pdf2email-cups-backend/)
 #
 # License: GPLv2
 #
@@ -91,7 +90,8 @@ def create_pdf(output_file):
                '-sPAPERSIZE=a4 -dPDFSETTINGS=/printer -sOutputFile=%s -c save pop -f'
                ' - &> /dev/null' % output_file)
     fpipe = os.popen(command)
-    ret_code = fpipe.close()    # This is the child process' exit code. None on success.
+    # TODO: Verify exit code!
+    ret_code = fpipe.close()
     return ret_code
 
 
@@ -101,14 +101,13 @@ def send_email(output_file, request_datetime):
     Sends the created pdf file as an email attachment. If an error has
     occured in the PDF creation process, it just sends a failure notice.
     """
+
     # Create the container (outer) email message.
     outer = MIMEMultipart()
     outer['Subject'] = 'PDF print request'
     outer['From'] = sender
     outer['To'] = reciever
-    outer.preamble = 'Requested PDF print.'
-    # Guarantees the message ends in a newline
-    outer.epilogue = ''
+    outer.preamble = 'PDF print request'
 
     msg = MIMEText('Print me, please!\n\r', 'plain', 'utf-8')
     outer.attach(msg)
@@ -118,9 +117,7 @@ def send_email(output_file, request_datetime):
     msg = MIMEBase('application', 'pdf')
     msg.set_payload(fp.read())
     fp.close()
-    # Encode the payload using Base64
     encoders.encode_base64(msg)
-    # Set the filename parameter
     msg.add_header('Content-Disposition', 'attachment', filename=os.path.basename(output_file))
     outer.attach(msg)
 
@@ -128,9 +125,7 @@ def send_email(output_file, request_datetime):
     s = smtplib.SMTP(smtp_server)
     s.starttls()
     s.sendmail(sender, reciever, outer.as_string())
-    # s.send_message(msg)
     s.quit()
-    s.close()
 
 
 def logger(msg):
@@ -143,7 +138,7 @@ def main():
     if len(sys.argv) == 1:
         # Without arguments should give backend info.
         # This is also used when lpinfo -v is issued, where it should include "direct this_backend"
-        logger('direct %s "Unknown" "Direct PDF Printing/Delivery to user email"\n'
+        logger('direct %s "Unknown" "Printing PDFs via email"\n'
                % os.path.basename(sys.argv[0]))
         sys.exit(0)
     if len(sys.argv) not in (5, 6):
