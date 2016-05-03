@@ -16,12 +16,12 @@ Führe folgende Kommandos schritt für schritt aus.
 
 ```bash
 EMAIL='vorname.nachname@hsr.ch'
-wget "https://raw.githubusercontent.com/raphiz/hsr-email-print/master/pdf2email"
-sed -i -e 's/vorname.nachname@hsr.ch/'$EMAIL'/g' pdf2email
+wget "https://raw.githubusercontent.com/raphiz/hsr-email-print/master/hsr-email-print"
+sed -i -e 's/vorname.nachname@hsr.ch/'$EMAIL'/g' hsr-email-print
 wget -O "Generic-PostScript_Printer-Postscript.ppd" "http://www.openprinting.org/ppd-o-matic.php?driver=Postscript&printer=Generic-PostScript_Printer&.submit=Generate+PPD+file&show=0&.cgifields=show&.cgifields=shortgui"
 sudo mv Generic-PostScript_Printer-Postscript.ppd /etc/cups/ppd/
-sudo mv pdf2email /usr/lib/cups/backend/pdf2email
-sudo chmod 700 /usr/lib/cups/backend/pdf2email
-sudo chown root:root /usr/lib/cups/backend/pdf2email
-sudo lpadmin -p HSR -E -v pdf2email:/tmp -P /etc/cups/ppd/Generic-PostScript_Printer-Postscript.ppd
+sudo mv hsr-email-print /usr/lib/cups/backend/hsr-email-print
+sudo chmod 700 /usr/lib/cups/backend/hsr-email-print
+sudo chown root:root /usr/lib/cups/backend/hsr-email-print
+sudo lpadmin -p HSR -E -v hsr-email-print:/tmp -P /etc/cups/ppd/Generic-PostScript_Printer-Postscript.ppd
 ```
