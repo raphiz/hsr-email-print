@@ -1,5 +1,7 @@
 # Drucken via CUPS an der HSR
 
+[![forthebadge](http://forthebadge.com/images/badges/built-with-swag.svg)](http://forthebadge.com)
+
 Dieses Skript ermöglicht bequemes Drucken von alternativen Betriebssystemen an der HSR.
 Es wird ein neuer Drucker names HSR installiert, mit dem du drucken kannst. Im Hintergrund
 wird dann eine E-Mail an den mobileprint service der HSR gesendet.
@@ -25,3 +27,12 @@ sudo chmod 700 /usr/lib/cups/backend/hsr-email-print
 sudo chown root:root /usr/lib/cups/backend/hsr-email-print
 sudo lpadmin -p HSR -E -v hsr-email-print:/tmp -P /etc/cups/ppd/Generic-PostScript_Printer-Postscript.ppd
 ```
+
+## Pakete erstellen
+Um die Ubuntu und Fedora Pakete zu erstellen, folgende Kommandos ausführen:
+
+```bash
+sudo make package
+```
+
+Die Pakete finden sich anschliessend im Verzeichnis `dist/`
